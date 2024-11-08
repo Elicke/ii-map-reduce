@@ -16,7 +16,7 @@ public class InvertedIndexing {
             this.conf = job;
         }
 
-        public void map(LongWritable docId, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+        public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 
             // retrieve # keywords from JobConf
             int argc = Integer.parseInt( conf.get( "argc" ) );
@@ -43,9 +43,9 @@ public class InvertedIndexing {
             }
 
             // pass to reduce
-            for (String keyword : keywordCount) {
+            for (String keyword : keywordCount.keySet()) {
                 if (keywordCount.get(keyword) > 0) {
-                    output.collect(Text(keyword), Text(filename + " " + String.valueOf(keywordCount.get(keyword))));
+                    output.collect(new Text(keyword), new Text(filename + " " + String.valueOf(keywordCount.get(keyword))));
                 }
             }
 
@@ -56,10 +56,26 @@ public class InvertedIndexing {
         public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 
             // actual computation is here
-            // CONTINUE IMPLEMENTATION...
+            String docList = ""; // string concatenation of all filename counts
+            HashMap<String, int> documents = new HashMap<String, int>; // document container (filenames & counts) for keyword
+
+            // read each filename+count from values
+            while (values.hasNext()) {
+                String currValue = values.next().get().toString(); // currValue = "filename count"
+                String filename = currValue.split(" ")[0];
+                int count = Integer.parseInt(currValue.split(" ")[1]);
+                if (documents.containsKey(filename) {
+                    int updatedCount = documents.get(filename) + count;
+                    documents.put(filename, updatedCount);
+                } else {
+                    documents.put(filename, count);
+                }
 
             // finally, print it out
-            output.collect(key, docListText );
+            for (String doc : documents.keySet()) {
+                docList += doc + " " + String.valueOf(documents.get(doc));
+            }
+            output.collect(key, new Text(docList));
 
         }
 
