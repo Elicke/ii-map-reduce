@@ -26,7 +26,7 @@ public class InvertedIndexing {
             String filename = "" + fileSplit.getPath( ).getName( );
 
             // hashtable for keyword counts
-            HashMap<String, int> keywordCount = new HashMap<String, int>();
+            HashMap<String, Integer> keywordCount = new HashMap<String, Integer>();
             for (int i = 0; i < argc; i++) {
                 keywordCount.put(conf.get("keyword" + i), 0); // initialize each keyword's count to 0
             }
@@ -59,11 +59,11 @@ public class InvertedIndexing {
 
             // actual computation is here
             String docList = ""; // string concatenation of all filename counts
-            HashMap<String, int> documents = new HashMap<String, int>(); // document container (filenames & counts) for keyword
+            HashMap<String, Integer> documents = new HashMap<String, Integer>(); // document container (filenames & counts) for keyword
 
             // read each filename+count from values
             while (values.hasNext()) {
-                String currValue = values.next().get().toString(); // currValue = "filename count"
+                String currValue = values.next().toString(); // currValue = "filename count"
                 String filename = currValue.split(" ")[0];
                 int count = Integer.parseInt(currValue.split(" ")[1]);
                 if (documents.containsKey(filename)) {
