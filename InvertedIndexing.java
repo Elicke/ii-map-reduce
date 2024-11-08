@@ -49,6 +49,8 @@ public class InvertedIndexing {
                 }
             }
 
+        }
+
     }
 
     public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
@@ -70,6 +72,7 @@ public class InvertedIndexing {
                 } else {
                     documents.put(filename, count);
                 }
+            }
 
             // finally, print it out
             for (String doc : documents.keySet()) {
