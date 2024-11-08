@@ -73,7 +73,7 @@ public class InvertedIndexing {
 
             // finally, print it out
             for (String doc : documents.keySet()) {
-                docList += doc + " " + String.valueOf(documents.get(doc));
+                docList += doc + " " + String.valueOf(documents.get(doc)) + " ";
             }
             output.collect(key, new Text(docList));
 
