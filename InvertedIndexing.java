@@ -25,7 +25,29 @@ public class InvertedIndexing {
             FileSplit fileSplit = ( FileSplit )reporter.getInputSplit( );
             String filename = "" + fileSplit.getPath( ).getName( );
 
-            // CONTINUE IMPLEMENTATION...
+            // hashtable for keyword counts
+            HashMap<String, int> keywordCount = new HashMap<String, int>;
+            for (int i = 0; i < argc; i++) {
+                keywordCount.put(conf.get("keyword" + i), 0); // initialize each keyword's count to 0
+            }
+
+            // iterate through words in line and update keyword counts
+            String line = value.toString();
+            StringTokenizer tokenizer = new StringTokenizer(line);
+            while (tokenizer.hasMoreTokens()) {
+                String word = tokenizer.nextToken();
+                if (keywordCount.containsKey(word)) {
+                    int updatedCount = keywordCount.get(word) + 1;
+                    keywordCount.put(word, updatedCount);
+                }
+            }
+
+            // pass to reduce
+            for (String keyword : keywordCount) {
+                if (keywordCount.get(keyword) > 0) {
+                    output.collect(Text(keyword), Text(filename + " " + String.valueOf(keywordCount.get(keyword))));
+                }
+            }
 
     }
 
